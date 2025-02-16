@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Online Test</title>
+    <link rel="stylesheet" href="mcq.css">
+    <style>
+        /* Disable text selection */
+        body {
+            user-select: none;
+        }
+      
+        /* Style for camera feed */
+        #camera-container {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            width: 250px;
+            height: 200px;
+            border: 2px solid black;
+            background: black;
+        }
+      
+        video {
+            width: 100%;
+            height: 100%;
+        }
+      </style>
+      
+</head>
+<body>
+
+    <div class="container">
+        <img src="R.png" alt="">
+        <h1>Python Online Test</h1>
+        <p>Trainer: Mangalaprasath</p>
+        <div id="timer">Time Left: 60:00</div>
+        <form id="quizForm">
+            <div id="questions"></div>
+            <button type="button" onclick="submitQuiz()">Submit</button>
+        </form>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        let warningCount = 0; // Track warnings before forcing logout
+      
+        // Disable right-click
+        document.addEventListener("contextmenu", function (e) {
+            e.preventDefault();
+        });
+      
+        // Disable PrintScreen Key
+        document.addEventListener("keydown", function (e) {
+            if (e.key === "PrintScreen") {
+                alert("Screenshots are disabled!");
+                e.preventDefault();
+            }
+        });
+      
+        // Detect Tab Switching
+        document.addEventListener("visibilitychange", function () {
+            if (document.hidden) {
+                warningCount++;
+                alert("Tab switching is not allowed! Warning " + warningCount + "/3");
+                
+                if (warningCount >= 3) {
+                    alert("You have been disqualified for switching tabs!");
+                    window.location.href = "disqualified.html"; // Redirect or take action
+                }
+            }
+        });
+      
+        // Detect Minimized Window
+        let isWindowActive = true;
+        window.onblur = function () {
+            isWindowActive = false;
+            warningCount++;
+            alert("Window switching is not allowed! Warning " + warningCount + "/3");
+      
+            if (warningCount >= 3) {
+                alert("You have been disqualified for switching windows!");
+                window.location.href = "disqualified.html";
+            }
+        };
+      
+        window.onfocus = function () {
+            isWindowActive = true;
+        };
+      
+        // Start Camera & Show at Bottom
+        async function startCamera() {
+            const video = document.getElementById("camera-feed");
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                video.srcObject = stream;
+            } catch (err) {
+                console.error("Camera access denied:", err);
+            }
+        }
+      
+        // Start camera when the page loads
+        window.onload = startCamera;
+      </script>
+      
+      <!-- Camera Container -->
+      <div id="camera-container">
+          <video id="camera-feed" autoplay></video>
+      </div>
+      
+</body>
+</html>
